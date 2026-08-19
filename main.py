@@ -18,7 +18,7 @@ from pyrogram.errors import FloodWait, SessionPasswordNeeded, PasswordHashInvali
 from pyrogram.enums import ChatType
 
 # Database imports
-from sqlalchemy import create_engine, Column, Integer, BigInteger, String, DateTime, Boolean, Text
+from sqlalchemy import create_engine, Column, Integer, BigInteger, String, DateTime, Boolean, Text, text  # <-- ДОБАВИЛИ text
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -121,9 +121,10 @@ try:
     Base.metadata.create_all(engine)
     logger.info("✅ Таблицы созданы/проверены")
     
-    # Проверяем, что БД работает
+    # Проверяем, что БД работает (ИСПРАВЛЕНО!)
     with engine.connect() as conn:
-        conn.execute("SELECT 1")
+        conn.execute(text("SELECT 1"))  # <-- ДОБАВИЛИ text()
+        conn.commit()
     logger.info("✅ Подключение к БД успешно")
 except Exception as e:
     logger.error(f"❌ Ошибка БД: {e}")
